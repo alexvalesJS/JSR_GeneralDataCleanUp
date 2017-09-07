@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="SalesForce">
+      <rd:DataSourceID>c5599127-1cfc-4059-aed2-b133b0ab377a</rd:DataSourceID>
+      <DataSourceReference>SalesForce</DataSourceReference>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>8.5in</InteractiveHeight>
+  <ReportParameters>
+    <ReportParameter Name="Start">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd("yyyy",-1,today())</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Start Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="End">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=today()</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Cluster">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Energy Enterprise</Value>
+          <Value>FlexMatters</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>NT Cluster</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Energy Enterprise</Value>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>FlexMatters</Value>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>11in</InteractiveWidth>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>1in</RightMargin>
+  <LeftMargin>1in</LeftMargin>
+  <BottomMargin>1in</BottomMargin>
+  <rd:ReportID>a1a54e6a-20fc-4a6f-b8c0-353e5baf7156</rd:ReportID>
+  <PageWidth>11in</PageWidth>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Fields>
+        <Field Name="TR_ID">
+          <DataField>TR_ID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TR_Name">
+          <DataField>TR_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Actual_Amount__c">
+          <DataField>Actual_Amount__c</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Actual_Disbursement_Date__c">
+          <DataField>Actual_Disbursement_Date__c</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="RptDate">
+          <DataField>RptDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OrgProvFunds">
+          <DataField>OrgProvFunds</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OrgRecFunds">
+          <DataField>OrgRecFunds</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Cluster__c">
+          <DataField>Cluster__c</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="NTCluster">
+          <DataField>NTCluster</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>SalesForce</DataSourceName>
+        <CommandText>select a.TR_ID
+, a.TR_Name
+, a.Actual_Amount__c
+, a.Actual_Disbursement_Date__c
+, a.RptDate
+, a.OrgProvFunds
+, a.OrgRecFunds
+, a.Cluster__c
+, a.NTCluster
+from (select tr.Id "TR_ID"
+, tr.Name "TR_Name"
+, tr.Actual_Amount__c
+, tr.Actual_Disbursement_Date__c
+, "RptDate" = case
+  when month(tr.Actual_Disbursement_Date__c) = 1 then 'Jan-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 2 then 'Feb-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 3 then 'Mar-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 4 then 'Apr-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 5 then 'May-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 6 then 'Jun-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 7 then 'Jul-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 8 then 'Aug-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 9 then 'Sep-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 10 then 'Oct-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 11 then 'Nov-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 12 then 'Dec-' + convert(varchar,year(tr.actual_disbursement_date__c))
+end
+, opf.Name "OrgProvFunds"
+, orf.Name "OrgRecFunds"
+, convert(varchar,orf.Cluster__c) "Cluster__c"
+, 'FlexMatters' "NTCluster"
+from tranche_release__c tr
+inner join company_funding_round__c cfr on tr.Funding_Round__c = cfr.Id
+inner join account orf on cfr.Organization_Receiving_Funds__c = orf.Id
+inner join account opf on tr.Organization_Providing_Funds__c = opf.Id
+where tr.Funding_Status__c like '%Closed'
+and tr.Actual_Amount__c &gt; 0
+and tr.Actual_disbursement_Date__c is not null
+and coalesce(cfr.Funding_Round__c ,'Exit') &lt;&gt; 'Exit'
+and convert(varchar,orf.cluster__c) like '%FlexMatters%'
+and tr.Actual_disbursement_date__c between @Start and @End
+UNION
+select tr.Id "TR_ID"
+, tr.Name "TR_Name"
+, tr.Actual_Amount__c
+, tr.Actual_Disbursement_Date__c
+, "RptDate" = case
+  when month(tr.Actual_Disbursement_Date__c) = 1 then 'Jan-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 2 then 'Feb-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 3 then 'Mar-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 4 then 'Apr-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 5 then 'May-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 6 then 'Jun-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 7 then 'Jul-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 8 then 'Aug-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 9 then 'Sep-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 10 then 'Oct-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 11 then 'Nov-' + convert(varchar,year(tr.actual_disbursement_date__c))
+  when month(tr.Actual_Disbursement_Date__c) = 12 then 'Dec-' + convert(varchar,year(tr.actual_disbursement_date__c))
+end
+, opf.Name "OrgProvFunds"
+, orf.Name "OrgRecFunds"
+, convert(varchar,orf.Cluster__c) "Cluster__c"
+, 'Energy Enterprise' "NTCluster"
+from tranche_release__c tr
+inner join company_funding_round__c cfr on tr.Funding_Round__c = cfr.Id
+inner join account orf on cfr.Organization_Receiving_Funds__c = orf.Id
+inner join account opf on tr.Organization_Providing_Funds__c = opf.Id
+where tr.Funding_Status__c like '%Closed'
+and tr.Actual_Amount__c &gt; 0
+and tr.Actual_disbursement_Date__c is not null
+and coalesce(cfr.Funding_Round__c ,'Exit') &lt;&gt; 'Exit'
+and convert(varchar,orf.cluster__c) like '%Energy Enterprise%'
+and tr.Actual_disbursement_date__c between @Start and @End) a
+where a.NTCluster in (@Cluster)</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Start">
+            <Value>=Parameters!Start.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@End">
+            <Value>=Parameters!End.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Cluster">
+            <Value>=Parameters!Cluster.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <Width>9in</Width>
+  <Body>
+    <ReportItems>
+      <Matrix Name="matrix1">
+        <MatrixColumns>
+          <MatrixColumn>
+            <Width>0.6in</Width>
+          </MatrixColumn>
+        </MatrixColumns>
+        <ZIndex>4</ZIndex>
+        <DataSetName>DataSet1</DataSetName>
+        <RowGroupings>
+          <RowGrouping>
+            <Width>1.25in</Width>
+            <DynamicRows>
+              <Grouping Name="matrix1_NTCluster">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!NTCluster.Value</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Fields!NTCluster.Value</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <ReportItems>
+                <Textbox Name="NTCluster">
+                  <rd:DefaultName>NTCluster</rd:DefaultName>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>700</FontWeight>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                  <ZIndex>1</ZIndex>
+                  <CanGrow>true</CanGrow>
+                  <Value>=Fields!NTCluster.Value</Value>
+                </Textbox>
+              </ReportItems>
+            </DynamicRows>
+          </RowGrouping>
+        </RowGroupings>
+        <Top>5in</Top>
+        <ColumnGroupings>
+          <ColumnGrouping>
+            <Height>0.25in</Height>
+            <DynamicColumns>
+              <Grouping Name="matrix1_RptDate">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!RptDate.Value</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Fields!Actual_Disbursement_Date__c.Value</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <ReportItems>
+                <Textbox Name="RptDate">
+                  <rd:DefaultName>RptDate</rd:DefaultName>
+                  <Style>
+                    <BorderStyle>
+                      <Default>Solid</Default>
+                    </BorderStyle>
+                    <FontSize>9pt</FontSize>
+                    <FontWeight>700</FontWeight>
+                    <TextAlign>Center</TextAlign>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                  <ZIndex>2</ZIndex>
+                  <CanGrow>true</CanGrow>
+                  <Value>=Fields!RptDate.Value</Value>
+                </Textbox>
+              </ReportItems>
+            </DynamicColumns>
+          </ColumnGrouping>
+        </ColumnGroupings>
+        <Width>1.85in</Width>
+        <Corner>
+          <ReportItems>
+            <Textbox Name="textbox4">
+              <rd:DefaultName>textbox4</rd:DefaultName>
+              <Style>
+                <BorderColor>
+                  <Right>Black</Right>
+                  <Bottom>Black</Bottom>
+                </BorderColor>
+                <BorderStyle>
+                  <Right>Solid</Right>
+                  <Bottom>Solid</Bottom>
+                </BorderStyle>
+                <BorderWidth>
+                  <Right>1pt</Right>
+                  <Bottom>1pt</Bottom>
+                </BorderWidth>
+                <FontSize>9pt</FontSize>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+              <ZIndex>3</ZIndex>
+              <CanGrow>true</CanGrow>
+              <Value />
+            </Textbox>
+          </ReportItems>
+        </Corner>
+        <MatrixRows>
+          <MatrixRow>
+            <Height>0.25in</Height>
+            <MatrixCells>
+              <MatrixCell>
+                <ReportItems>
+                  <Textbox Name="Actual_Amount__c">
+                    <rd:DefaultName>Actual_Amount__c</rd:DefaultName>
+                    <Style>
+                      <BorderStyle>
+                        <Default>Solid</Default>
+                      </BorderStyle>
+                      <FontSize>9pt</FontSize>
+                      <Format>C2</Format>
+                      <TextAlign>Center</TextAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Value>=Sum(Fields!Actual_Amount__c.Value)/1000000</Value>
+                  </Textbox>
+                </ReportItems>
+              </MatrixCell>
+            </MatrixCells>
+          </MatrixRow>
+        </MatrixRows>
+        <Height>0.5in</Height>
+        <Left>0.125in</Left>
+      </Matrix>
+      <Chart Name="chart1">
+        <Legend>
+          <Visible>true</Visible>
+          <Style>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+          <Position>BottomCenter</Position>
+          <Layout>Row</Layout>
+        </Legend>
+        <CategoryAxis>
+          <Axis>
+            <Title />
+            <MajorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Visible>true</Visible>
+          </Axis>
+        </CategoryAxis>
+        <ZIndex>3</ZIndex>
+        <DataSetName>DataSet1</DataSetName>
+        <PlotArea>
+          <Style>
+            <BackgroundColor>LightGrey</BackgroundColor>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+        </PlotArea>
+        <ThreeDProperties>
+          <Rotation>30</Rotation>
+          <Inclination>30</Inclination>
+          <Shading>Simple</Shading>
+          <WallThickness>50</WallThickness>
+        </ThreeDProperties>
+        <PointWidth>0</PointWidth>
+        <SeriesGroupings>
+          <SeriesGrouping>
+            <DynamicSeries>
+              <Grouping Name="chart1_SeriesGroup1">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!NTCluster.Value</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Fields!NTCluster.Value</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <Label>=Fields!NTCluster.Value</Label>
+            </DynamicSeries>
+          </SeriesGrouping>
+        </SeriesGroupings>
+        <Top>0.875in</Top>
+        <Subtype>Plain</Subtype>
+        <ValueAxis>
+          <Axis>
+            <Title>
+              <Caption>Capital Attracted (Millions)</Caption>
+              <Style>
+                <FontWeight>700</FontWeight>
+              </Style>
+            </Title>
+            <Style>
+              <Format>C0</Format>
+            </Style>
+            <MajorGridLines>
+              <ShowGridLines>true</ShowGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Margin>true</Margin>
+            <Visible>true</Visible>
+            <Scalar>true</Scalar>
+          </Axis>
+        </ValueAxis>
+        <Type>Column</Type>
+        <Width>8.75in</Width>
+        <CategoryGroupings>
+          <CategoryGrouping>
+            <DynamicCategories>
+              <Grouping Name="chart1_CategoryGroup1">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!RptDate.Value</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Fields!Actual_Disbursement_Date__c.Value</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <Label>=Fields!RptDate.Value</Label>
+            </DynamicCategories>
+          </CategoryGrouping>
+        </CategoryGroupings>
+        <Palette>Default</Palette>
+        <ChartData>
+          <ChartSeries>
+            <DataPoints>
+              <DataPoint>
+                <DataValues>
+                  <DataValue>
+                    <Value>=Sum(Fields!Actual_Amount__c.Value)/1000000</Value>
+                  </DataValue>
+                </DataValues>
+                <DataLabel>
+                  <Style>
+                    <Format>P0</Format>
+                  </Style>
+                  <Value>=Sum(Fields!Actual_Amount__c.Value)/Sum(Fields!Actual_Amount__c.Value, "DataSet1")</Value>
+                </DataLabel>
+                <Marker>
+                  <Size>6pt</Size>
+                </Marker>
+              </DataPoint>
+            </DataPoints>
+          </ChartSeries>
+        </ChartData>
+        <Style>
+          <BackgroundColor>White</BackgroundColor>
+        </Style>
+        <Title />
+        <Height>4.125in</Height>
+        <Left>0.125in</Left>
+      </Chart>
+      <Textbox Name="textbox3">
+        <Top>0.5in</Top>
+        <Style>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Center</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+        <ZIndex>2</ZIndex>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>="Total Capital Attracted: $" &amp; Round(Sum(Fields!Actual_Amount__c.Value, "DataSet1")/1000000) &amp; "M"</Value>
+      </Textbox>
+      <Textbox Name="textbox2">
+        <rd:DefaultName>textbox2</rd:DefaultName>
+        <Top>0.25in</Top>
+        <Style>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Center</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+        <ZIndex>1</ZIndex>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>=Parameters!Start.Value &amp; " through " &amp; Parameters!End.Value</Value>
+      </Textbox>
+      <Textbox Name="textbox1">
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Style>
+          <FontSize>12pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <TextAlign>Center</TextAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.25in</Height>
+        <Value>Capital Attracted</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>6.5in</Height>
+  </Body>
+  <Language>en-US</Language>
+  <TopMargin>1in</TopMargin>
+  <PageHeight>8.5in</PageHeight>
+</Report>
